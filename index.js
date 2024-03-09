@@ -6,6 +6,7 @@ import inquirer from "inquirer";
 import { program } from "commander";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
+import camelCase from 'camelcase';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -79,6 +80,26 @@ async function updatePackageJsonName(projectPath, packageName) {
   await fs.writeJson(packageJsonPath, packageJson, { spaces: 2 });
 }
 
+// Function to update vite.config.ts
+async function updateViteConfig(projectPath, projectName) {
+  const viteConfigPath = path.join(projectPath, "vite.config.ts");
+  let viteConfig = await fs.readFile(viteConfigPath, "utf8");
+
+  // Generate names based on the project name
+  const libName = camelCase(projectName, { pascalCase: true }); // Convert to CamelCase
+  const fileName = formatToKebabCase(projectName);
+
+  // Replace the lib name and fileName in the vite config
+  viteConfig = viteConfig.replace(/name: ".*?"/, `name: "${libName}"`);
+  viteConfig = viteConfig.replace(
+    /fileName: \(format\) => `.*?`/,
+    `fileName: (format) => \`${fileName}.\${format}.js\``
+  );
+
+  // Write the updated config back to the file
+  await fs.writeFile(viteConfigPath, viteConfig);
+}
+
 async function copyBoilerplateFiles(options) {
   const projectPath = path.resolve(process.cwd(), options.directoryName);
   const sourcePath = path.resolve(__dirname, "./new-app-files");
@@ -89,6 +110,7 @@ async function copyBoilerplateFiles(options) {
       `Starter files for '${options.originalName}' (as '${options.packageName}') successfully created.`
     );
     await updatePackageJsonName(projectPath, options.packageName);
+    await updateViteConfig(projectPath, options.originalName);
 
     console.log(
       `Navigate to your new project with 'cd ${options.directoryName}'.`

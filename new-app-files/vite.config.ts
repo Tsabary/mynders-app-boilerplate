@@ -6,8 +6,8 @@ export default defineConfig({
   plugins: [react(), cssInjectedByJsPlugin()],
   build: {
     lib: {
-      entry: "src/Plugin.tsx", // Path to your main component
-      name: "ImageGallery",
+      entry: "src/App.tsx", // Path to your main component
+      name: "MyMyndersApp",
       formats: ["umd"],
       fileName: (format) => `image-gallery.${format}.js`,
     },
