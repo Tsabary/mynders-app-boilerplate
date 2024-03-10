@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { generateBackgroundPattern } from "mynders";
 
-import App from "./App.tsx";
+import Plugin from "./Plugin.tsx";
 import MyndersContainer from "./layout/MyndersContainer.tsx";
 
 const root = ReactDOM.createRoot(
@@ -18,7 +18,7 @@ root.render(
       }}
     >
       <MyndersContainer>
-        <App
+        <Plugin
           user={{ _id: "Aa1234", email: "user@example.com" }}
           folderId="dummy-folder-id"
           encryptData={(data) => "mock encrypted data: " + data}
