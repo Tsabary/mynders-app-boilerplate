@@ -1,6 +1,6 @@
 {
   "name": "create-mynders-app",
-  "version": "1.0.14",
+  "version": "1.0.16",
   "description": "Boilerplate for creating a new Mynders app",
   "main": "index.js",
   "type": "module",

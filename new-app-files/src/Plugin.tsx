@@ -1,12 +1,16 @@
 import "./styles.css";
-import { generateBackgroundPattern, MyndersAppProps } from "mynders";
 import icon from "./assets/icon_duo.png";
+import { generateBackgroundPattern, MyndersAppProps } from "mynders";
+import { MyndersProvider } from "./context/mynders-context";
+import useMynders from "./hooks/useMynders";
+import BuildInstructions from "./components/BuildInstructions";
 
-function Plugin(props: MyndersAppProps) {
-  const { user, folderId } = props;
+function Plugin() {
+  const { user, folderId } = useMynders(); // Use this hook to access data and methods provided by mynders inside any component in your plugin code
 
-  console.log("Current Mynders user: ", user);
-  console.log("Current Mynders folder ID: ", folderId);
+  console.log("Current Mynders user id: ", user._id);
+  console.log("Current Mynders user name (if defined): ", user.name);
+  console.log("Current Mynders folder id: ", folderId);
 
   return (
     <div
@@ -19,16 +23,13 @@ function Plugin(props: MyndersAppProps) {
         className="h-36 w-36 flex-shrink-0 flex-grow-0 pl-1 pr-2"
       />
       <h1 className="text-5xl font-bold mt-4">Your Mynders Plugin</h1>
-      <ol className="list-decimal mt-6">
-        <li>Edit Plugin.tsx</li>
-        <li>
-          Run{" "}
-          <code className="bg-gray-200 px-2 py-0.5 rounded">npm run build</code>
-        </li>
-        <li>Upload your built *.umd.js file as a new Mynders plugin.</li>
-      </ol>
+      <BuildInstructions />
     </div>
   );
 }
-
-export default Plugin;
+const PluginContainer = React.memo((props: MyndersAppProps) => (
+  <MyndersProvider {...props}>
+    <App />
+  </MyndersProvider>
+));
+export default PluginContainer;
